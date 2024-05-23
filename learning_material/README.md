@@ -3,6 +3,7 @@
 Download These: 
 Python: https://www.python.org/ftp/python/3.12.3/python-3.12.3-amd64.exe
 VSCode: https://code.visualstudio.com/docs/?dv=win64user
+Git: https://git-scm.com/downloads
 
 Make a Python Folder in your documents.
 
