@@ -1,5 +1,4 @@
 import sys
-import os
-from app import app as application
+sys.path.insert(0, '/var/www/pdxflaskapp/pdxflaskapp')
 
-sys.path.insert(0, os.path.dirname(__file__))
+from app import app as application
