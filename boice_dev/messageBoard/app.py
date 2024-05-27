@@ -7,8 +7,8 @@ app = Flask(__name__)
 
 # Database connection details
 DB_HOST = '127.0.0.1'
-DB_USER = 'boice'
-DB_PASSWORD = 'Callofduty8'
+DB_USER = 'env.user'
+DB_PASSWORD = 'env.password'
 DB_NAME = 'blog_db'
 
 # Render Homepage
