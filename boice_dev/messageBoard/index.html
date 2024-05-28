@@ -1,159 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blog Post Submission</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-<style>
-    /* Additional styles specific to this HTML */
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        padding: 20px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Post Submission</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 
-    .container {
-        max-width: 800px;
-        margin: auto;
-        background: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    h1 {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    form {
-        margin-bottom: 40px;
-    }
-
-    label {
-        font-weight: bold;
-    }
-
-    input[type="text"],
-    textarea {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 20px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-    }
-
-    input[type="submit"] {
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        padding: 12px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    input[type="submit"]:hover {
-        background-color: #0056b3;
-    }
-
-    #posts {
-        margin-top: 40px;
-    }
-
-    .post {
-        background: #f9f9f9;
-        padding: 15px;
-        margin-bottom: 20px;
-        border-radius: 5px;
-    }
-
-    .post h3 {
-        margin-top: 0;
-    }
-
-    .post p {
-        margin-bottom: 5px;
-    }
-
-    .post hr {
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
-</style>
 </head>
+
 <body>
-<h1>Write a Blog Post</h1>
-<form id="blogForm">
-<label for="title">Title:</label><br>
-<input type="text" id="title" name="title" required><br><br>
+    <h1>Write a Blog Post</h1>
+    <form id="blogForm">
+        <label for="title">Title:</label><br>
+        <input type="text" id="title" name="title" required><br><br>
 
-<label for="content">Content:</label><br>
-<textarea id="content" name="content" rows="10" cols="50" required></textarea><br><br>
+        <label for="content">Content:</label><br>
+        <textarea id="content" name="content" rows="10" cols="50" required></textarea><br><br>
 
-<label for="author">Your Name:</label><br>
-<input type="text" id="author" name="author" required><br><br>
+        <label for="author">Your Name:</label><br>
+        <input type="text" id="author" name="author" required><br><br>
 
-<input type="submit" value="Submit">
-</form>
+        <input type="submit" value="Submit">
+    </form>
 
-<h2>All Posts</h2>
-<div id="posts">
-<!-- Posts will be dynamically inserted here -->
-</div>
+    <h2>All Posts</h2>
+    <div id="posts">
+        <!-- Posts will be dynamically inserted here -->
+    </div>
 
-<script>
-document.getElementById('blogForm').addEventListener('submit', function(event) {
-event.preventDefault(); // Prevent the default form submission
+    <script>
+        document.getElementById('blogForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the default form submission
 
-const title = document.getElementById('title').value;
-const content = document.getElementById('content').value;
-const author = document.getElementById('author').value;
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+            const author = document.getElementById('author').value;
 
-const xhr = new XMLHttpRequest();
-xhr.open('POST', '/submit', true);
-xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/submit', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-xhr.onreadystatechange = function () {
-if (xhr.readyState === 4 && xhr.status === 200) {
-const response = JSON.parse(xhr.responseText);
-alert(`Blog post submitted successfully!\nTitle: ${response.title}\nContent: ${response.content}\nAuthor: ${response.author}`);
-fetchPosts(); // Refresh the posts
-}
-};
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText);
+                    alert(`Blog post submitted successfully!\nTitle: ${response.title}\nContent: ${response.content}\nAuthor: ${response.author}`);
+                    fetchPosts(); // Refresh the posts
+                }
+            };
 
-const params = `title=${encodeURIComponent(title)}&content=${encodeURIComponent(content)}&author=${encodeURIComponent(author)}`;
-xhr.send(params);
-});
+            const params = `title=${encodeURIComponent(title)}&content=${encodeURIComponent(content)}&author=${encodeURIComponent(author)}`;
+            xhr.send(params);
+        });
 
-function fetchPosts() {
-const xhr = new XMLHttpRequest();
-xhr.open('GET', '/posts', true);
+        function fetchPosts() {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', '/posts', true);
 
-xhr.onreadystatechange = function () {
-if (xhr.readyState === 4 && xhr.status === 200) {
-const posts = JSON.parse(xhr.responseText);
-const postsContainer = document.getElementById('posts');
-postsContainer.innerHTML = ''; // Clear current posts
-posts.forEach(post => {
-const postElement = document.createElement('div');
-postElement.innerHTML = `
-<h3>${post.title}</h3>
-<p>${post.content}</p>
-<p><strong>Author:</strong> ${post.author}</p>
-<p><em>${post.timestamp}</em></p>
-<hr>
-`;
-postsContainer.appendChild(postElement);
-});
-}
-};
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const posts = JSON.parse(xhr.responseText);
+                    const postsContainer = document.getElementById('posts');
+                    postsContainer.innerHTML = ''; // Clear current posts
+                    posts.forEach(post => {
+                        const postElement = document.createElement('div');
+                        postElement.innerHTML = `
+                            <h3>${post.title}</h3>
+                            <p>${post.content}</p>
+                            <p><strong>Author:</strong> ${post.author}</p>
+                            <p><em>${post.timestamp}</em></p>
+                            <hr>
+                            `;
+                        postsContainer.appendChild(postElement);
+                    });
+                }
+            };
 
-xhr.send();
-}
+            xhr.send();
+        }
 
-// Fetch posts when the page loads
-document.addEventListener('DOMContentLoaded', fetchPosts);
-</script>
+        // Fetch posts when the page loads
+        document.addEventListener('DOMContentLoaded', fetchPosts);
+    </script>
 </body>
+
 </html>
