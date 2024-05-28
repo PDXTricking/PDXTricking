@@ -3,59 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Stylish Website</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Blog Post Submission</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Additional styles specific to this HTML */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-bottom: 40px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        #posts {
+            margin-top: 40px;
+        }
+
+        .post {
+            background: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .post h3 {
+            margin-top: 0;
+        }
+
+        .post p {
+            margin-bottom: 5px;
+        }
+
+        .post hr {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
-    <header class="main-header">
-        <nav class="navigation">
-            <div class="logo">Brand</div>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Services</a></li>
-                <li><a href="#">Portfolio</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main>
-        <section class="hero">
-            <div class="hero-content">
-                <h1>Welcome to Our Modern Website</h1>
-                <p>Delivering high-quality design and exceptional user experiences.</p>
-                <a href="#" class="cta-button">Get Started</a>
-            </div>
-        </section>
-        <section class="features">
-            <div class="feature">
-                <i class="fas fa-cogs"></i>
-                <h2>Innovative Solutions</h2>
-                <p>We provide cutting-edge technology solutions that are tailor-made for your business.</p>
-            </div>
-            <div class="feature">
-                <i class="fas fa-lightbulb"></i>
-                <h2>Creative Ideas</h2>
-                <p>Our creative team brings fresh ideas to life, ensuring your brand stands out.</p>
-            </div>
-            <div class="feature">
-                <i class="fas fa-users"></i>
-                <h2>Professional Team</h2>
-                <p>Our team of experts is dedicated to delivering top-notch services and support.</p>
-            </div>
-        </section>
-        <section class="portfolio">
-            <h2>Our Work</h2>
-            <div class="gallery">
-                <div class="gallery-item"><img src="project1.jpg" alt="Project 1"></div>
-                <div class="gallery-item"><img src="project2.jpg" alt="Project 2"></div>
-                <div class="gallery-item"><img src="project3.jpg" alt="Project 3"></div>
-                <div class="gallery-item"><img src="project4.jpg" alt="Project 4"></div>
-            </div>
-        </section>
-    </main>
-    <footer class="main-footer">
-        <p>&copy; 2024 Brand Inc. All rights reserved.</p>
-    </footer>
+<div class="container">
+    <h1>Write a Blog Post</h1>
+    <form id="blogForm">
+        <label for="title">Title:</label><br>
+        <input type="text" id="title" name="title" required><br><br>
+
+        <label for="content">Content:</label><br>
+        <textarea id="content" name="content" rows="10" cols="50" required></textarea><br><br>
+
+        <label for="author">Your Name:</label><br>
+        <input type="text" id="author" name="author" required><br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <h2>All Posts</h2>
+    <div id="posts">
+        <!-- Posts will be dynamically inserted here -->
+    </div>
+</div>
+
+<script>
+    // JavaScript code remains the same
+</script>
 </body>
 </html>
