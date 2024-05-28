@@ -1,14 +1,19 @@
 from flask import Flask, request, jsonify, render_template
 import mysql.connector
+import os
 from mysql.connector import Error
-from datetime import datetime
+from datetime import datetime, timedelta
+from flask_cors import cross_origin
+from dotenv import load_dotenv
+
+load_dotenv(dotenv_path='/var/www/pdxflaskapp/pdxflaskapp/.env')
 
 app = Flask(__name__)
 
 # Database connection details
 DB_HOST = '127.0.0.1'
-DB_USER = 'env.user'
-DB_PASSWORD = 'env.password'
+DB_USER = os.getenv('BLOG_DB_USER')
+DB_PASSWORD = os.getenv('BLOG_DB_PW')
 DB_NAME = 'blog_db'
 
 # Render Homepage
@@ -35,6 +40,7 @@ def submit_post():
     title = request.form['title']
     content = request.form['content']
     author = request.form['author']
+    expiration_time = datetime.now() + timedelta(days=7)
 
     # Create a connection
     connection = create_connection()
@@ -42,10 +48,10 @@ def submit_post():
 
     # Insert the data into the database
     query = """
-    INSERT INTO posts (title, content, author) 
-    VALUES (%s, %s, %s)
+    INSERT INTO posts (title, content, author, expiration_time) 
+    VALUES (%s, %s, %s, %s)
     """
-    values = (title, content, author)
+    values = (title, content, author, expiration_time)
     cursor.execute(query, values)
     connection.commit()
 
@@ -57,10 +63,12 @@ def submit_post():
     return jsonify({
         'title': title,
         'content': content,
-        'author': author
+        'author': author,
+        'expiration_time': expiration_time.strftime('%Y-%m-%d %H:%M:%S')
     })
 
 @app.route('/posts', methods=['GET'])
+@cross_origin(origins=['https://www.pdxtricking.org'], methods=['GET'], allow_headers=['Content-Type'])
 def get_posts():
     connection = create_connection()
     cursor = connection.cursor(dictionary=True)
@@ -71,6 +79,24 @@ def get_posts():
     connection.close()
 
     return jsonify(posts)
+
+# Function to delete expired posts
+@app.route('/deleteposts', methods=['POST'])
+def delete_expired_posts():
+    connection = create_connection()
+    cursor = connection.cursor()
+
+    # Delete expired posts
+    query = "DELETE FROM posts WHERE expiration_time <= NOW()"
+    cursor.execute(query)
+    connection.commit()
+
+    cursor.close()
+    connection.close()
+
+@app.route('/delete')
+def delete_page():
+    return render_template('delete.html')
 
 if __name__ == '__main__':
     app.run()
