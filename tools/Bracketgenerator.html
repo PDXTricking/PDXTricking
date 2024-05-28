@@ -3,59 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RCG Bracket Generator</title>
+    <title>Tricking Battle Bracket Generator</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
         .bracket {
-            font-family: monospace;
-            white-space: pre;
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: auto;
+            grid-gap: 20px;
+        }
+        .round {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .match {
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #f9f9f9;
+            margin-bottom: 10px;
+        }
+        .bye {
+            font-style: italic;
+            color: gray;
+        }
+        .winner {
+            font-weight: bold;
+            color: green;
+        }
+        #totalRounds {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <h1>RCG Bracket Generator</h1>
-    <p>Enter a comma-separated list of names:</p>
-    <input type="text" id="namesInput">
-    <button onclick="generateBracket()">Generate Bracket</button>
-    <div class="bracket" id="bracketResults"></div>
+    <div class="container">
+        <h1>Tricking Battle Bracket Generator</h1>
+        <p>Enter a list of comma-separated names:</p>
+        <textarea id="names" rows="4" cols="50"></textarea>
+        <button onclick="generateBracket()">Generate Bracket</button>
+        <div id="bracketContainer"></div>
+        <div id="totalRounds"></div>
+    </div>
 
     <script>
-        function readNamesFromInput(input) {
-            return input.split(",").map(name => name.trim());
-        }
-
         function shuffleArray(array) {
-            // Fisher-Yates shuffle algorithm
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [array[i], array[j]] = [array[j], array[i]];
             }
-        }
-
-        function create1v1Bracket(names) {
-            shuffleArray(names); // Randomize the order
-            const pairs = [];
-            for (let i = 0; i < names.length; i += 2) {
-                const player1 = names[i];
-                const player2 = names[i + 1];
-                pairs.push({ player1, player2 });
-            }
-            return pairs;
+            return array;
         }
 
         function generateBracket() {
-            const inputNames = document.getElementById("namesInput").value;
-            const playerNames = readNamesFromInput(inputNames);
+            const namesInput = document.getElementById('names').value;
+            const namesArray = namesInput.split(',').map(name => name.trim());
 
-            if (playerNames.length < 2) {
-                document.getElementById("bracketResults").textContent = "Please provide at least two names.";
-            } else {
-                const bracketPairs = create1v1Bracket(playerNames);
-                const bracketResults = bracketPairs.map((pair, index) => `
-                    ┌─── Battle ${index + 1} ───┐
-                    │ ${pair.player1} vs ${pair.player2} │
-                    └─────────────────────┘`).join("\n");
-                document.getElementById("bracketResults").innerHTML = `<pre>${bracketResults}</pre>`;
+            if (namesArray.length < 2) {
+                alert("Please enter at least two names.");
+                return;
             }
+
+            const bracketContainer = document.getElementById('bracketContainer');
+            bracketContainer.innerHTML = '';
+
+            const numRounds = Math.ceil(Math.log2(namesArray.length));
+            const matchesPerRound = Math.pow(2, numRounds - 1);
+
+            let players = namesArray.map(name => ({ name, eliminated: false }));
+            let round = 1;
+
+            for (let i = 0; i < numRounds; i++) {
+                if (i == 0) {
+                    const roundTitle = document.createElement('h3');
+                    roundTitle.textContent = `Round ${round}`;
+                    roundTitle.classList.add('round');
+                    bracketContainer.appendChild(roundTitle);
+
+                    const roundMatches = document.createElement('div');
+                    roundMatches.classList.add('bracket');
+                    roundTitle.appendChild(roundMatches);
+
+                    shuffleArray(players);
+
+                    for (let j = 0; j < matchesPerRound; j++) {
+                        const match = document.createElement('div');
+                        match.classList.add('match');
+
+                        const player1 = players.shift();
+                        const player2 = players.shift();
+
+                        if (player1 && player2) {
+                            match.textContent = `${player1.name} vs ${player2.name}`;
+
+                            roundMatches.appendChild(match);
+                        } else if (player1) {
+                            const bye = document.createElement('div');
+                            bye.classList.add('match');
+                            bye.textContent = `${player1.name} has a bye`;
+                            bye.classList.add('bye');
+                            roundMatches.appendChild(bye);
+                        }
+                    }
+                }
+                players = players.filter(player => !player.eliminated);
+                round++;
+            }
+
+            // Print total rounds
+            document.getElementById('totalRounds').textContent = `Total Rounds: ${numRounds}`;
+            document.getElementById('totalRounds').style.display = 'block';
         }
     </script>
 </body>
