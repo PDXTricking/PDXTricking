@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournament Bracket</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .bracket {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+        }
+        .round {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .match {
+            border: 1px solid #000;
+            padding: 10px;
+            margin: 10px;
+            width: 100px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="bracket" class="bracket"></div>
+    <script src="bracket.js">
+document.addEventListener("DOMContentLoaded", function() {
+    function generateBracket(contestants) {
+        let rounds = [];
+        let currentRound = contestants.map(name => ({name}));
+        
+        while (currentRound.length > 1) {
+            rounds.push(currentRound);
+            let nextRound = [];
+            for (let i = 0; i < currentRound.length; i += 2) {
+                if (i + 1 < currentRound.length) {
+                    nextRound.push([currentRound[i], currentRound[i + 1]]);
+                } else {
+                    nextRound.push([currentRound[i], {name: "BYE"}]);
+                }
+            }
+            currentRound = nextRound;
+        }
+        if (currentRound.length === 1) {
+            rounds.push(currentRound);
+        }
+        return rounds;
+    }
+    
+    function displayBracket(bracket) {
+        const bracketDiv = document.getElementById('bracket');
+        bracket.forEach((round, roundIndex) => {
+            const roundDiv = document.createElement('div');
+            roundDiv.classList.add('round');
+            round.forEach(match => {
+                const matchDiv = document.createElement('div');
+                matchDiv.classList.add('match');
+                if (Array.isArray(match)) {
+                    matchDiv.innerHTML = `${match[0].name} vs ${match[1].name}`;
+                } else {
+                    matchDiv.innerHTML = match.name;
+                }
+                roundDiv.appendChild(matchDiv);
+            });
+            bracketDiv.appendChild(roundDiv);
+        });
+    }
+    
+    const contestants = ["Alice", "Bob", "Charlie", "David", "Eve"];
+    const bracket = generateBracket(contestants);
+    displayBracket(bracket);
+});
+    </script>
+</body>
+</html>
