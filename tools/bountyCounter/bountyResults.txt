@@ -1,0 +1,3 @@
+Before-bounty	Post-bounty	bountyTotal
+double-flash-swingthru	6	30
+tak-full-switchblade	1	5
