@@ -57,7 +57,8 @@ def calculate_bounty_total(df, x_col):
     - DataFrame: DataFrame with 'bountyTotal' column added.
     """
     # Create a new column 'bountyTotal' with values multiplied by 5
-    df['bountyTotal'] = df[x_col] * 5
+    price = 5
+    df['bountyTotal'] = df[x_col] * price
     
     return df
 
@@ -91,7 +92,7 @@ def main():
     bounty_df['Post-bounty'] = bounty_df['Post-bounty'].apply(lambda x: x[-1])
 
     # Extract the part of the string before '-bounty', stopping at a space if present
-    bounty_df['Before-bounty'] = bounty_df['Description'].str.extract(r'(\S+)-bounty')
+    bounty_df['Before-bounty'] = bounty_df['Description'].str.extract(r'(\S+)-bounty\)')
 
     print(bounty_df.head())
 
