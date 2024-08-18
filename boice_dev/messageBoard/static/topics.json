@@ -1,0 +1,38 @@
+{
+    "animals": [
+        "dog", "cat", "bird", "fish", "rabbit", "hamster", "frog","elephant", "lion", "tiger", "giraffe", "zebra", "hippo", "rhino", "gorilla", "monkey", "koala",
+        "cow", "horse", "sheep", "goat", "pig", "chicken", "duck", "turkey", "penguin", "parrot","dodo",
+        "dolphin", "whale", "shark", "octopus", "jellyfish", "seahorse", "starfish", "crab", "lobster", "shrimp",
+        "bee", "butterfly", "ant", "spider", "snail", "caterpillar", "ladybug", "mosquito", "dragonfly", "firefly",
+        "bear", "wolf", "fox", "deer", "squirrel", "rabbit", "raccoon", "skunk", "moose", "beaver",
+        "crocodile", "alligator", "turtle", "snake", "lizard", "frog", "chameleon", "gecko", "iguana", "komodo dragon",
+        "panda", "koala", "red panda", "sloth", "lemur", "meerkat", "otter", "hedgehog", "armadillo", "platypus","sloth",
+        "eagle", "hawk", "owl", "falcon", "vulture", "peacock", "parrot", "pigeon", "seagull", "swan",
+        "mouse", "rat", "guinea pig", "chinchilla", "ferret",
+        "kangaroo","wombat","emu","ostrich",
+        "camel","llama","alpaca","bison",
+        "Eastern dragon","western dragon","phoenix","unicorn","pegasus","mermaid","centaur","griffin","minotaur","alien","wyvern"
+    ],
+    "objects":[
+        "swivel chair", "table", "desk", "lamp", "bookshelf", "couch", "television", "computer", "keyboard", "computer mouse","phone", "clock", "mirror", "painting", "vase", "plant", "flower","tree","fern", "bottle", "cup", "plate","spoon", "fork", "knife", "glass", "window", "door", "car", "bicycle", "motorcycle", "bus","train", "airplane", "boat", "ship", "helicopter","hot air balloon","spaceship", "camera", "guitar", "piano", "drum", "violin","microphone", "speaker", "headphones", "wallet", "bag", "shoes", "hat", "watch", "umbrella", "key","pen", "pencil", "notebook", "paper", "scissors", "tape", "glue", "calculator", "ruler", "compass"
+    ],
+    "food":[
+        "apple", "banana", "orange", "grape", "strawberry", "watermelon", "pineapple", "kiwi", "pear", "peach","carrot", "broccoli", "cucumber", "tomato", "potato", "onion", "garlic", "pepper", "lettuce", "cabbage","bread", "bagel", "croissant", "muffin", "pancake", "waffle", "donut", "cake", "pie", "cookie","chocolate", "candy", "ice cream", "popcorn", "chips", "pretzel", "noodle", "sushi", "pizza", "hamburger","hot dog", "sandwich", "taco", "burrito", "soup", "salad", "stew","coffee", "tea", "beer", "wine","cookies and milk"
+    ],
+    "human":[
+        "doctor", "teacher", "engineer", "lawyer", "nurse", "chef", "artist", "scientist", "writer", "athlete","pilot", "police", "firefighter", "musician", "photographer", "veterinarian", "mechanic","electrician","criminal","astronaut","baby","old man","old woman","wizard"
+    ],
+    "clothing": [
+        "shirt", "pants", "dress", "skirt", "jacket", "coat", "sweater", "hoodie", "blouse", "tie",
+        "socks", "shoes", "boots", "sandals", "hat", "scarf", "gloves", "belt", "sunglasses", "wristwatch","tuxedo"
+    ],
+    "nouns":[
+        "gargoyle","tiara","oasis","silhouette","foliage","sarcophagus","tranquility","chandelier","metamorphosis","light","hologram","booger"
+    ],
+    "places":[
+        "tower", "castle", "palace", "temple","church", "shrine","farm","bridge","countryside","city","mountain","river"
+    ],
+    "challenge":[
+        "panda with a flower","folding chair","duck with a knife","penguin in a tuxedo","frog on a unicycle","sleeping dragon","steampunk robot","owl reading a book","bird playing guitar","cloud shaped like a dragon","mars rover","life sized chair"
+    ]
+}

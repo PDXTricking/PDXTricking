@@ -221,6 +221,10 @@ def delete_page():
 def message_board():
     return render_template('messageboard.html')
 
+@app.route('/staff')
+def staff():
+    return render_template('staff.html')
+
 if __name__ == '__main__':
     # Create the database tables if they don't exist
 
