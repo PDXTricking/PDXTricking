@@ -1,20 +1,36 @@
-from flask_login import UserMixin
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_bcrypt import Bcrypt
+from flask_sqlalchemy import SQLAlchemy
+
+from app import db
+
+bcrypt = Bcrypt()
+login_manager = LoginManager()
 
 class User(UserMixin, db.Model):
+    __bind_key__ = 'user_db'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, nullable=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
-from werkzeug.utils import secure_filename
-import magic, os
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
-ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+def register_user(username, email, password):
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+    new_user = User(username=username, email=email, password_hash=hashed_password)
+    db.session.add(new_user)
+    db.session.commit()
 
-def allowed_mime_type(file):
-    mime = magic.from_buffer(file.stream.read(2048), mime=True)
-    file.stream.seek(0)
-    return mime in ['image/png', 'image/jpeg', 'image/gif']
+def login_user(username, password):
+    user = User.query.filter_by(username=username).first()
+    if user and bcrypt.check_password_hash(user.password_hash, password):
+        login_user(user)
+        return True
+    return False
+
+def logout_user():
+    logout_user()
