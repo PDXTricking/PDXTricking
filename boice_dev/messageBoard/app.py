@@ -1,4 +1,4 @@
-#imports
+# imports
 import os
 from io import BytesIO
 from dotenv import load_dotenv
@@ -6,19 +6,22 @@ from werkzeug.utils import secure_filename
 import pandas as pd
 import io
 
-#flask imports
+# flask imports
 from flask import Flask, request, render_template, send_file, redirect, url_for, jsonify
 from flask_cors import cross_origin
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_login import LoginManager, login_required, current_user
+from flask_bcrypt import Bcrypt
 
-#mysql imports
+# mysql imports
 import mysql.connector
 from mysql.connector import Error
 
-#Our imports
+# Our imports
 from message_board import get_all_posts, submit_a_post, delete_all_posts, delete_all_battles
-from userManagement import User, login_manager, bcrypt, register_user, login_user, logout_user
+from user_management import register_user, login_user_func, logout_user_func
+from models import db, create_user_table
 
 load_dotenv(dotenv_path='/var/www/pdxflaskapp/pdxflaskapp/.env')
 
@@ -29,25 +32,27 @@ DB_HOST = '127.0.0.1'
 DB_USER = os.getenv('BLOG_DB_USER')
 DB_PASSWORD = os.getenv('BLOG_DB_PW')
 
-#Login DB
+# Login DB
 USER_DB_NAME = 'user_db'
 
-DB_CONNECTOR= 'mysql+mysqlconnector'
+DB_CONNECTOR = 'mysql+mysqlconnector'
 
-# Configure the first database (SQLite)
-""" Example
+app.config['SQLALCHEMY_DATABASE_URI'] = "{}://{}:{}@{}/{}".format(DB_CONNECTOR, DB_USER, DB_PASSWORD, DB_HOST, USER_DB_NAME)
 app.config['SQLALCHEMY_BINDS'] = {
-    'fs_db': "{}://{}:{}@{}/{}".format(DB_CONNECTOR,DB_USER,DB_PASSWORD,DB_HOST,FS_DB_NAME),
-    'bt_db': "{}://{}:{}@{}/{}".format(DB_CONNECTOR,DB_USER,DB_PASSWORD,DB_HOST,BT_DB_NAME)
-} 
-"""
-app.config['SQLALCHEMY_BINDS'] = {
-    'user_db': "{}://{}:{}@{}/{}".format(DB_CONNECTOR,DB_USER,DB_PASSWORD,DB_HOST,USER_DB_NAME)    
-} 
+    'user_db': "{}://{}:{}@{}/{}".format(DB_CONNECTOR, DB_USER, DB_PASSWORD, DB_HOST, USER_DB_NAME)
+}
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
+db.init_app(app)
+create_user_table(app)  # Create the User table
 
+login_manager = LoginManager()
+login_manager.init_app(app)
+bcrypt = Bcrypt(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 # Function to create a database connection
 def create_connection():
@@ -63,10 +68,9 @@ def create_connection():
         print(f"The error '{e}' occurred")
     return connection
 
-
-#######################- Routes -################################
-# Render Homepage
+# Routes
 @app.route("/")
+@login_required
 def index():
     return render_template('index.html')
 
@@ -76,8 +80,10 @@ def register():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
-        register_user(username, email, password)
-        return redirect(url_for('login'))
+        if register_user(username, email, password):
+            return redirect(url_for('login'))
+        else:
+            return "Registration failed"
     return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -85,18 +91,17 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        if login_user(username, password):
+        if login_user_func(username, password):
             return redirect(url_for('index'))
         else:
             return "Invalid username or password"
     return render_template('login.html')
 
 @app.route('/logout')
+@login_required
 def logout():
-    logout_user()
-    return redirect(url_for('index'))
+    logout_user_func()
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
-    # Create the database tables if they don't exist
-
     app.run()
