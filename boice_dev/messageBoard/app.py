@@ -26,6 +26,7 @@ from models import db, create_user_table
 load_dotenv(dotenv_path='/var/www/pdxflaskapp/pdxflaskapp/.env')
 
 app = Flask(__name__)
+app.secret_key = 'your-secret-key'  # Set the secret key
 
 # Database connection details
 DB_HOST = '127.0.0.1'
@@ -44,7 +45,7 @@ app.config['SQLALCHEMY_BINDS'] = {
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
-create_user_table(app)  # Create the User table
+User = create_user_table(app)  # Create the User table
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -70,9 +71,12 @@ def create_connection():
 
 # Routes
 @app.route("/")
-@login_required
 def index():
     return render_template('index.html')
+
+@app.route("/battle")
+def battle():
+    return render_template('battle.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -80,7 +84,7 @@ def register():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
-        if register_user(username, email, password):
+        if register_user(app, username, email, password):
             return redirect(url_for('login'))
         else:
             return "Registration failed"
@@ -91,7 +95,7 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        if login_user_func(username, password):
+        if login_user_func(app, username, password):
             return redirect(url_for('index'))
         else:
             return "Invalid username or password"

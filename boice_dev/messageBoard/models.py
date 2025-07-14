@@ -15,5 +15,5 @@ def create_user_table(app):
             password_hash = db.Column(db.String(128), nullable=False)
             created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
-        db.create_all()  # Remove the 'bind' argument
+        db.create_all()
         return User
