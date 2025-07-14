@@ -21,7 +21,8 @@ from mysql.connector import Error
 # Our imports
 from message_board import get_all_posts, submit_a_post, delete_all_posts, delete_all_battles
 from user_management import register_user, login_user_func, logout_user_func
-from models import db, create_user_table
+from models import db, User, BattleSubmission
+from battle_management import submit_battle
 
 load_dotenv(dotenv_path='/var/www/pdxflaskapp/pdxflaskapp/.env')
 
@@ -45,7 +46,6 @@ app.config['SQLALCHEMY_BINDS'] = {
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
-User = create_user_table(app)  # Create the User table
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -74,9 +74,15 @@ def create_connection():
 def index():
     return render_template('index.html')
 
-@app.route("/battle")
+@app.route('/battle')
 def battle():
-    return render_template('battle.html')
+    submissions = BattleSubmission.query.all()
+    return render_template('battle.html', submissions=submissions)
+
+@app.route('/submit_battle', methods=['POST'])
+@login_required
+def submit_battle_route():
+    return submit_battle(app)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():

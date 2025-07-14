@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battle Submission</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        header {
+            background-color: #ffcc00;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            color: #fff;
+            text-shadow: 2px 2px #333;
+        }
+        .content {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .content h2 {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .content p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        form {
+            margin-top: 20px;
+        }
+        form label {
+            display: block;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        form input[type="file"] {
+            margin-bottom: 20px;
+        }
+        form input[type="submit"] {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            background-color: #ffcc00;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        form input[type="submit"]:hover {
+            background-color: #e6b800;
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 20px;
+        }
+        footer p {
+            margin: 0;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Battle Submission</h1>
+    </header>
+    <div class="content">
+        {% if current_user.is_authenticated %}
+            <h2>Submit Your Photos</h2>
+            <p>Select up to three photos to submit for the battle.</p>
+            <form action="{{ url_for('submit_battle') }}" method="post" enctype="multipart/form-data">
+                <label for="photo1">Photo 1:</label>
+                <input type="file" name="photo1" id="photo1" accept="image/*" required>
+                <br>
+                <label for="photo2">Photo 2:</label>
+                <input type="file" name="photo2" id="photo2" accept="image/*">
+                <br>
+                <label for="photo3">Photo 3:</label>
+                <input type="file" name="photo3" id="photo3" accept="image/*">
+                <br>
+                <input type="submit" value="Submit">
+            </form>
+        {% else %}
+            <p>You must be logged in to submit photos for the battle.</p>
+            <p>Please <a href="{{ url_for('login') }}">log in</a> or <a href="{{ url_for('register') }}">register</a> to participate.</p>
+        {% endif %}
+    </div>
+    <footer>
+        <p>&copy; 2024 Origami Art. All rights reserved.</p>
+    </footer>
+</body>
+</html>

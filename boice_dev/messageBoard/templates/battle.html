@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battle</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        header {
+            background-color: #ffcc00;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            color: #fff;
+            text-shadow: 2px 2px #333;
+        }
+        .content {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .content h2 {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .content p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .submissions {
+            margin-top: 20px;
+        }
+        .submissions h3 {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .submissions ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .submissions li {
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .submissions li:hover {
+            text-decoration: underline;
+        }
+        .photos {
+            display: none;
+            margin-top: 20px;
+        }
+        .photos img {
+            max-width: 100%;
+            margin-bottom: 10px;
+        }
+        .close-btn {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #ffcc00;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            text-decoration: none;
+            background-color: #ffcc00;
+            color: #fff;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #e6b800;
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 20px;
+        }
+        footer p {
+            margin: 0;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Battle</h1>
+    </header>
+    <div class="content">
+        <h2>Welcome to the Battle Arena</h2>
+        <p>Get ready to showcase your origami skills and compete against other players in exciting battles!</p>
+        <a href="{{ url_for('submit_battle') }}" class="button">Submit</a>
+        <div class="submissions">
+            <h3>Submissions</h3>
+            <ul>
+                {% for submission in submissions %}
+                    <li onclick="showPhotos('{{ submission.user.username }}', {{ submission.photo_paths }})">
+                        {{ submission.user.username }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="photos" id="photosContainer">
+            <!-- Photos will be dynamically inserted here -->
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 Origami Art. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function showPhotos(username, photoPaths) {
+            const photosContainer = document.getElementById('photosContainer');
+            photosContainer.innerHTML = '';
+
+            const heading = document.createElement('h3');
+            heading.textContent = `Photos submitted by ${username}`;
+            photosContainer.appendChild(heading);
+
+            photoPaths.forEach(path => {
+                const img = document.createElement('img');
+                img.src = path;
+                photosContainer.appendChild(img);
+            });
+
+            const closeBtn = document.createElement('button');
+            closeBtn.textContent = 'Close';
+            closeBtn.classList.add('close-btn');
+            closeBtn.addEventListener('click', () => {
+                photosContainer.style.display = 'none';
+            });
+            photosContainer.appendChild(closeBtn);
+
+            photosContainer.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
