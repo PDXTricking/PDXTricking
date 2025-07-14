@@ -1,87 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog Post Submission</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-
-</head>
-
-<body>
-    <h1>Write a Blog Post</h1>
-    <form id="blogForm">
-        <label for="title">Title:</label><br>
-        <input type="text" id="title" name="title" required><br><br>
-
-        <label for="content">Content:</label><br>
-        <textarea id="content" name="content" rows="10" cols="50" required></textarea><br><br>
-
-        <label for="author">Your Name:</label><br>
-        <input type="text" id="author" name="author" required><br><br>
-
-        <input type="submit" value="Submit">
-    </form>
-
-    <h2>All Posts</h2>
-    <div id="posts">
-        <!-- Posts will be dynamically inserted here -->
-    </div>
-
-    <script>
-        document.getElementById('blogForm').addEventListener('submit', function (event) {
-            event.preventDefault(); // Prevent the default form submission
-
-            const title = document.getElementById('title').value;
-            const content = document.getElementById('content').value;
-            const author = document.getElementById('author').value;
-
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', '/submit', true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    const response = JSON.parse(xhr.responseText);
-                    alert(`Blog post submitted successfully!\nTitle: ${response.title}\nContent: ${response.content}\nAuthor: ${response.author}`);
-                    fetchPosts(); // Refresh the posts
-                }
-            };
-
-            const params = `title=${encodeURIComponent(title)}&content=${encodeURIComponent(content)}&author=${encodeURIComponent(author)}`;
-            xhr.send(params);
-        });
-
-        function fetchPosts() {
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', '/posts', true);
-
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    const posts = JSON.parse(xhr.responseText);
-                    const postsContainer = document.getElementById('posts');
-                    postsContainer.innerHTML = ''; // Clear current posts
-                    posts.forEach(post => {
-                        const postElement = document.createElement('div');
-                        postElement.innerHTML = `
-                            <h3>${post.title}</h3>
-                            <p>${post.content}</p>
-                            <p><strong>Author:</strong> ${post.author}</p>
-                            <p><em>${post.timestamp}</em></p>
-                            <hr>
-                            `;
-                        postsContainer.appendChild(postElement);
-                    });
-                }
-            };
-
-            xhr.send();
+    <title>Origami Art</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            color: #333;
         }
+        header {
+            background-color: #ffcc00;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            color: #fff;
+            text-shadow: 2px 2px #333;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            text-decoration: none;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        .content {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .content h2 {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .content p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .gallery img {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 20px;
+        }
+        footer p {
+            margin: 0;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Origami Art</h1>
+        <div class="button-container">
+            <a href="{{ url_for('battle') }}" class="button">Battle</a>
+            <a href="{{ url_for('login') }}" class="button">Login</a>
+        </div>
+    </header>
+    <div class="content">
+        <h2>Welcome to the World of Origami</h2>
+        <p>Origami is the ancient Japanese art of paper folding. This website is dedicated to showcasing beautiful origami creations, from simple shapes to complex designs. Explore the gallery below to discover the intricate beauty of paper folding.</p>
 
-        // Fetch posts when the page loads
-        document.addEventListener('DOMContentLoaded', fetchPosts);
-    </script>
+        <div class="gallery">
+            <img src="https://uploads-ssl.webflow.com/600dda17320ad90aa4921571/6361e6731255d8000d40d170_STSTP.png" alt="Samurai">
+            <img src="https://uploads-ssl.webflow.com/600dda17320ad90aa4921571/61524a5e62eae52356da96bd_BMWTP.png" alt="BMW">
+            <img src="https://uploads-ssl.webflow.com/600dda17320ad90aa4921571/6022ef7d144fab89c352f664_IMG_9683.JPG" alt="gsman">
+            <img src="https://uploads-ssl.webflow.com/600dda17320ad90aa4921571/6020037b4267b53cb60fed47_IMG_9417.JPG" alt="Dragon Knight">
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 Origami Art. All rights reserved.</p>
+    </footer>
 </body>
-
 </html>
