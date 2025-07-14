@@ -136,14 +136,5 @@
         <button type="submit">Submit</button>
     </form>
 
-    <h2>Uploaded Photos</h2>
-    <div class="uploaded-photos">
-        {% for user in users %}
-            <div>
-                <p>{{ user.name }}</p>
-                <img src="{{ url_for('static', filename='uploads/' + user.photo_filename) }}" alt="{{ user.name }}">
-            </div>
-        {% endfor %}
-    </div>
 </body>
 </html>

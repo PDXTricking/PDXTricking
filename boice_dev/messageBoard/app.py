@@ -3,9 +3,11 @@ import os
 from io import BytesIO
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
+import pandas as pd
+import io
 
 #flask imports
-from flask import Flask, request, render_template, send_file, redirect, url_for
+from flask import Flask, request, render_template, send_file, redirect, url_for, jsonify
 from flask_cors import cross_origin
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -78,6 +80,41 @@ class File(db.Model):
 @app.route("/")
 def index():
     return render_template('index.html')
+
+@app.route("/pdx")
+def pdx():
+    return render_template('pdx.html')
+
+@app.route('/upload_csv', methods=['POST'])
+def upload_csv():
+    # Check if a file is included in the request
+    if 'file' not in request.files:
+        return jsonify({"error": "No file part in the request"}), 400
+
+    file = request.files['file']
+
+    # Check if the file is empty
+    if file.filename == '':
+        return jsonify({"error": "No file selected"}), 400
+
+    try:
+        # Read the uploaded CSV file into a pandas DataFrame
+        data = pd.read_csv(io.StringIO(file.stream.read().decode('utf-8')))
+
+        # Filter rows where "Checkout Line Item Summary" contains "Rose City Gathering"
+        filtered_data = data[data['Checkout Line Item Summary'].str.contains("Rose City Gathering", na=False)]
+
+        # Select the required columns
+        result = filtered_data[["Card Name", "Amount", "Created date (UTC)", "Checkout Line Item Summary", "Customer Email"]]
+
+        # Convert the result to plain text
+        result_text = result.to_csv(index=False, header=False).replace('\n', ',\n').strip(',')
+
+
+        return render_template('pdx.html', result_text=result_text)
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # Function to create a database connection
 def create_connection():
