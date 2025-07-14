@@ -46,6 +46,10 @@ app.config['SQLALCHEMY_BINDS'] = {
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
+migrate = Migrate(app, db)  # Initialize Flask-Migrate
+
+with app.app_context():
+    db.create_all()  # Create all tables, including the battle_submission table
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -79,6 +83,11 @@ def battle():
     submissions = BattleSubmission.query.all()
     return render_template('battle.html', submissions=submissions)
 
+@app.route('/submit_battle', methods=['GET'])
+@login_required
+def submit_battle_form():
+    return render_template('submit_battle.html')
+
 @app.route('/submit_battle', methods=['POST'])
 @login_required
 def submit_battle_route():
@@ -90,7 +99,7 @@ def register():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
-        if register_user(app, username, email, password):
+        if register_user(username, email, password):
             return redirect(url_for('login'))
         else:
             return "Registration failed"
@@ -101,7 +110,7 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        if login_user_func(app, username, password):
+        if login_user_func(username, password):
             return redirect(url_for('index'))
         else:
             return "Invalid username or password"
