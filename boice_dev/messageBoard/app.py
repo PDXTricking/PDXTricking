@@ -29,6 +29,9 @@ load_dotenv(dotenv_path='/var/www/pdxflaskapp/pdxflaskapp/.env')
 app = Flask(__name__)
 app.secret_key = 'your-secret-key'  # Set the secret key
 
+#Competition ID
+COMP_ID = 9
+
 # Database connection details
 DB_HOST = '127.0.0.1'
 DB_USER = os.getenv('BLOG_DB_USER')
@@ -84,7 +87,7 @@ def index():
 
 @app.route('/battle')
 def battle():
-    submissions = BattleSubmission.query.all()
+    submissions = BattleSubmission.query.filter_by(comp_id=COMP_ID).all()
     return render_template('battle.html', submissions=submissions)
 
 @app.route('/submit_battle', methods=['GET'])
