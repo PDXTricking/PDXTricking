@@ -21,3 +21,4 @@ class BattleSubmission(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     photo_paths = db.Column(db.JSON, nullable=False)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    comp_id = db.Column(db.Integer, nullable=False)
