@@ -72,6 +72,9 @@
 
             <button type="submit">Login</button>
         </form>
+        <div class="forgot-link" style="text-align:center; margin-top:8px;">
+            <a href="{{ url_for('reset_password_request') }}" style="color:#83a598;">Forgot password?</a>
+        </div>
         <div class="register-link">
             Don't have an account? <a href="{{ url_for('register') }}">Register here</a>
         </div>
