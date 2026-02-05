@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bracket Generator</title>
+    <style>
+        body {
+            background-color: #282828;
+            color: #ebdbb2;
+            font-family: monospace;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #fabd2f;
+        }
+
+        p {
+            color: #b8bb26;
+        }
+
+        input[type="text"] {
+            background-color: #3c3836;
+            color: #ebdbb2;
+            border: 1px solid #7c6f64;
+            padding: 5px;
+            margin-bottom: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #458588;
+            color: #ebdbb2;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        button:hover {
+            background-color: #83a598;
+        }
+
+        .bracket {
+            background-color: #3c3836;
+            color: #ebdbb2;
+            padding: 20px;
+            border: 1px solid #7c6f64;
+            border-radius: 5px;
+            white-space: pre;
+        }
+
+        pre {
+            font-family: monospace;
+            color: #ebdbb2;
+            white-space: pre-wrap;
+        }
+
+        .battle-title {
+            color: #fabd2f;
+        }
+
+        .battle-players {
+            color: #b8bb26;
+        }
+
+        .battle-topic {
+            color: #d79921;
+        }
+
+        .battle-divider {
+            color: #ebdbb2;
+        }
+
+        .battle-container {
+            margin-bottom: 10px;
+        }
+
+        .new-topic-button {
+            background-color: #d65d0e;
+            color: #ebdbb2;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .new-topic-button:hover {
+            background-color: #f5853f;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bracket Generator</h1>
+    <p>Enter a comma-separated list of names:</p>
+    <input type="text" id="namesInput">
+    <button onclick="generateBracket()">Generate Bracket</button>
+    <div class="bracket" id="bracketResults"></div>
+
+    <script>
+        const topics = {
+            "animals": [
+                "dog", "cat", "bird", "fish", "rabbit", "hamster", "frog", "elephant", "lion", "tiger", "giraffe", "zebra", "hippo", "rhino", "gorilla", "monkey", "koala",
+                "cow", "horse", "sheep", "goat", "pig", "chicken", "duck", "turkey", "penguin", "parrot", "dodo",
+                "dolphin", "whale", "shark", "octopus", "jellyfish", "seahorse", "starfish", "crab", "lobster", "shrimp",
+                "bee", "butterfly", "ant", "spider", "snail", "caterpillar", "ladybug", "mosquito", "dragonfly", "firefly",
+                "bear", "wolf", "fox", "deer", "squirrel", "rabbit", "raccoon", "skunk", "moose", "beaver",
+                "crocodile", "alligator", "turtle", "snake", "lizard", "frog", "chameleon", "gecko", "iguana", "komodo dragon",
+                "panda", "koala", "red panda", "sloth", "lemur", "meerkat", "otter", "hedgehog", "armadillo", "platypus", "sloth",
+                "eagle", "hawk", "owl", "falcon", "vulture", "peacock", "parrot", "pigeon", "seagull", "swan",
+                "mouse", "rat", "guinea pig", "chinchilla", "ferret",
+                "kangaroo", "wombat", "emu", "ostrich",
+                "camel", "llama", "alpaca", "bison",
+                "Eastern dragon", "western dragon", "phoenix", "unicorn", "pegasus", "mermaid", "centaur", "griffin", "minotaur", "alien", "wyvern"
+            ],
+            "objects": [
+                "swivel chair", "table", "desk", "lamp", "bookshelf", "couch", "television", "computer", "keyboard", "computer mouse", "phone", "clock", "mirror", "painting", "vase", "plant", "flower", "tree", "fern", "bottle", "cup", "plate", "spoon", "fork", "knife", "glass", "window", "door", "car", "bicycle", "motorcycle", "bus", "train", "airplane", "boat", "ship", "helicopter", "hot air balloon", "spaceship", "camera", "guitar", "piano", "drum", "violin", "microphone", "speaker", "headphones", "wallet", "bag", "shoes", "hat", "watch", "umbrella", "key", "pen", "pencil", "notebook", "paper", "scissors", "tape", "glue", "calculator", "ruler", "compass"
+            ],
+            "food": [
+                "apple", "banana", "orange", "grape", "strawberry", "watermelon", "pineapple", "kiwi", "pear", "peach", "carrot", "broccoli", "cucumber", "tomato", "potato", "onion", "garlic", "pepper", "lettuce", "cabbage", "bread", "bagel", "croissant", "muffin", "pancake", "waffle", "donut", "cake", "pie", "cookie", "chocolate", "candy", "ice cream", "popcorn", "chips", "pretzel", "noodle", "sushi", "pizza", "hamburger", "hot dog", "sandwich", "taco", "burrito", "soup", "salad", "stew", "coffee", "tea", "beer", "wine", "cookies and milk"
+            ],
+            "human": [
+                "doctor", "teacher", "engineer", "lawyer", "nurse", "chef", "artist", "scientist", "writer", "athlete", "pilot", "police", "firefighter", "musician", "photographer", "veterinarian", "mechanic", "electrician", "criminal", "astronaut", "baby", "old man", "old woman", "wizard"
+            ],
+            "clothing": [
+                "shirt", "pants", "dress", "skirt", "jacket", "coat", "sweater", "hoodie", "blouse", "tie",
+                "socks", "shoes", "boots", "sandals", "hat", "scarf", "gloves", "belt", "sunglasses", "wristwatch", "tuxedo"
+            ],            
+            "places": [
+                "tower", "castle", "palace", "temple", "church", "shrine", "farm", "bridge", "countryside", "city", "mountain", "river"
+            ]            
+        };
+
+        function readNamesFromInput(input) {
+            return input.split(",").map(name => name.trim());
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function getRandomTopic() {
+            const topicCategories = Object.keys(topics);
+            const randomCategory = topicCategories[Math.floor(Math.random() * topicCategories.length)];
+            return topics[randomCategory][Math.floor(Math.random() * topics[randomCategory].length)];
+        }
+
+        function create1v1Bracket(names) {
+            shuffleArray(names);
+            const pairs = [];
+            for (let i = 0; i < names.length; i += 2) {
+                const player1 = names[i];
+                const player2 = names[i + 1];
+                pairs.push({
+                    player1,
+                    player2,
+                    topic: getRandomTopic()
+                });
+            }
+            return pairs;
+        }
+
+        function generateBracket() {
+            const inputNames = document.getElementById("namesInput").value;
+            const playerNames = readNamesFromInput(inputNames);
+
+            if (playerNames.length < 2) {
+                document.getElementById("bracketResults").textContent = "Please provide at least two names.";
+            } else {
+                const bracketPairs = create1v1Bracket(playerNames);
+                const bracketResults = bracketPairs.map((pair, index) => `
+                    <div class="battle-container">
+                        <span class="battle-title">┌─── Battle ${index + 1} ───┐</span><br>
+                        <span class="battle-players">│ ${pair.player1} vs ${pair.player2} │</span><br>
+                        <span class="battle-topic">│ Topic: ${pair.topic} │</span><br>
+                        <button class="new-topic-button" onclick="updateTopic(${index})">New Topic</button><br>
+                        <span class="battle-divider">└─────────────────────┘</span>
+                    </div>`).join("\n");
+                document.getElementById("bracketResults").innerHTML = bracketResults;
+            }
+        }
+
+        function updateTopic(index) {
+            const newTopic = getRandomTopic();
+            const topicSpan = document.querySelectorAll('.battle-topic')[index];
+            topicSpan.textContent = `│ Topic: ${newTopic} │`;
+        }
+    </script>
+</body>
+</html>

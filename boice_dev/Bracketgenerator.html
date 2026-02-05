@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RCG Bracket Generator</title>
+    <style>
+        .bracket {
+            font-family: monospace;
+            white-space: pre;
+        }
+    </style>
+</head>
+<body>
+    <h1>RCG Bracket Generator</h1>
+    <p>Enter a comma-separated list of names:</p>
+    <input type="text" id="namesInput">
+    <button onclick="generateBracket()">Generate Bracket</button>
+    <div class="bracket" id="bracketResults"></div>
+
+    <script>
+        function readNamesFromInput(input) {
+            return input.split(",").map(name => name.trim());
+        }
+
+        function shuffleArray(array) {
+            // Fisher-Yates shuffle algorithm
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function create1v1Bracket(names) {
+            shuffleArray(names); // Randomize the order
+            const pairs = [];
+            for (let i = 0; i < names.length; i += 2) {
+                const player1 = names[i];
+                const player2 = names[i + 1];
+                pairs.push({ player1, player2 });
+            }
+            return pairs;
+        }
+
+        function generateBracket() {
+            const inputNames = document.getElementById("namesInput").value;
+            const playerNames = readNamesFromInput(inputNames);
+
+            if (playerNames.length < 2) {
+                document.getElementById("bracketResults").textContent = "Please provide at least two names.";
+            } else {
+                const bracketPairs = create1v1Bracket(playerNames);
+                const bracketResults = bracketPairs.map((pair, index) => `
+                    ┌─── Battle ${index + 1} ───┐
+                    │ ${pair.player1} vs ${pair.player2} │
+                    └─────────────────────┘`).join("\n");
+                document.getElementById("bracketResults").innerHTML = `<pre>${bracketResults}</pre>`;
+            }
+        }
+    </script>
+</body>
+</html>

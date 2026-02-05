@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload CSV File</title>
+    <style>
+        body {
+            background-color: #282828; /* Gruvbox dark background */
+            color: #ebdbb2; /* Gruvbox light text */
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h1 {
+            color: #fb4934; /* Gruvbox red */
+        }
+        form {
+            background-color: #3c3836; /* Gruvbox darker background */
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+        input[type="submit"] {
+            background-color: #b8bb26; /* Gruvbox green */
+            color: #282828; /* Gruvbox dark text */
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #98971a; /* Gruvbox lighter green */
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+            background-color: #3c3836; /* Gruvbox darker background */
+            color: #ebdbb2; /* Gruvbox light text */
+            border: 1px solid #7c6f64; /* Gruvbox border color */
+            border-radius: 5px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload CSV File</h1>
+    <p>This page allows you to upload a CSV file containing payment data for processing.</p>
+    <form method="POST" enctype="multipart/form-data" action="/upload_csv">
+        <label for="file">Choose CSV file:</label>
+        <input type="file" name="file" id="file" accept=".csv" required>
+        <textarea readonly>This CSV file should contain payment records in the specified format.</textarea>
+        <input type="submit" value="Upload">
+    </form>
+</body>
+</html>
